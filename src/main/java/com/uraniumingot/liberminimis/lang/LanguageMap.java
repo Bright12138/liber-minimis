@@ -17,6 +17,7 @@ public class LanguageMap
 	
 	private static ArrayList<String> readLocalizationFile()
 	{
+		LiberMinimis.log.info("Trying to load localization file");
 		BufferedReader br;
 		ArrayList<String> unprocessed = new ArrayList<String>();
 		try 
@@ -32,7 +33,6 @@ public class LanguageMap
 			}
 			while(line != null);
 			br.close();
-			LiberMinimis.log.info("Localization loaded, parsing");
 		} 
 		catch (Exception e)
 		{
@@ -43,6 +43,7 @@ public class LanguageMap
 	
 	private static Map<String, String> parseLang(ArrayList<String> unprocessed)
 	{
+		LiberMinimis.log.info("Localization loaded, parsing");
 		Map<String, String> mapping= new HashMap<String, String>();
 		for (String line : unprocessed)
 		{
@@ -62,6 +63,7 @@ public class LanguageMap
 		String localized = lang.get(unlocalized);
 		if(localized != null)
 			return localized;
+		LiberMinimis.log.error("Could not find localization for key: " + unlocalized + "returning unlocalized text");
 		return unlocalized;
 	}
 }

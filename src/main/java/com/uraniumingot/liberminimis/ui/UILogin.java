@@ -1,6 +1,7 @@
 package com.uraniumingot.liberminimis.ui;
 
 
+import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 import com.uraniumingot.liberminimis.util.EncryptUtil;
 
@@ -25,7 +26,7 @@ public class UILogin extends Stage
 	
 	public UILogin()
 	{
-
+		LiberMinimis.log.info("Starting a login screen");
 		this.setTitle(LanguageMap.translate("login.title"));
 		
 		HBox hbtop = new HBox();
@@ -56,6 +57,11 @@ public class UILogin extends Stage
 		this.show();
 	}
 	
+	public void hideStage()
+	{
+		this.hide();
+	}
+	
 	public EventHandler<ActionEvent> getLoginEvent()
 	{
 		return new EventHandler<ActionEvent>()
@@ -68,6 +74,12 @@ public class UILogin extends Stage
 				{
 					login.setText(LanguageMap.translate("login.wrongpassword"));
 					login.setTextFill(Color.RED);
+				}
+				else
+				{
+					LiberMinimis.log.info("Starting main application");
+					hideStage();
+					new UIMain();
 				}
 			}
 		};

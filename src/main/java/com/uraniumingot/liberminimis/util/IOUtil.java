@@ -16,7 +16,7 @@ public class IOUtil
 	public static Object readFile(File file, Object def)
 	{
 		Object obj = null;
-		LiberMinimis.log.info(file);
+		File bak = new File(file.getAbsolutePath() + FileSuffix.BACKUP);
 		if(file.exists())
 		{
 			try
@@ -25,7 +25,6 @@ public class IOUtil
 			}
 			catch (Exception e1)
 			{
-				File bak = new File(file.getAbsolutePath() + FileSuffix.BACKUP);
 				if(bak.exists())
 				{
 					LiberMinimis.log.warn("An error occured while loading file: " + file.getAbsolutePath() + ", using backup", e1);
@@ -46,6 +45,20 @@ public class IOUtil
 				}
 			}
 		}
+		else if(bak.exists())
+		{
+			LiberMinimis.log.warn("An error occured while loading file: " + file.getAbsolutePath() + ", using backup");
+			try
+			{
+				obj = readObject(bak);
+				file.delete();
+				writeObject(file, obj);
+			}
+			catch (Exception e2)
+			{
+				LiberMinimis.log.error("Failed to load the backup file!", e2);
+			}
+		}
 		if(obj != null)
 			return obj;
 		return def;
@@ -54,7 +67,7 @@ public class IOUtil
 	public static void writeFile(File file, Object obj)
 	{
 		if(!file.getParentFile().exists())
-			file.mkdirs();
+			file.getParentFile().mkdirs();
 		File bak = new File(file.getAbsolutePath() + FileSuffix.BACKUP);
 		try 
 		{

@@ -24,6 +24,7 @@ public class LiberMinimis extends Application
 	@Override
 	public void start(Stage primary)
 	{
+		log.info("Application Started");
 		if(EncryptUtil.hasPassword())
 			new UILogin();
 		else

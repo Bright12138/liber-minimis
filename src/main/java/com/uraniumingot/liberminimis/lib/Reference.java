@@ -5,7 +5,7 @@ import java.io.File;
 public class Reference 
 {
 	
-	public static final String NAME = "BookAssist";
+	public static final String NAME = "Liber Minimis";
 	public static final String VERSION = "@VERSION@";
 	public static final String DATA_FOLDER_SUFFIX = "Data";
 	public static final String TRANSLATION_FILE_LOCATION = "/translate" + FileSuffix.LANG;

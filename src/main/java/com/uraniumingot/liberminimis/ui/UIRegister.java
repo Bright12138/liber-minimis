@@ -26,6 +26,7 @@ public class UIRegister extends Stage
 	
 	public UIRegister()
 	{
+		LiberMinimis.log.info("Starting a register screen");
 		this.setTitle(LanguageMap.translate("login.title"));
 		
 		HBox hbtop = new HBox();
@@ -76,12 +77,12 @@ public class UIRegister extends Stage
 			{
 				String pw = pwfield.getText();
 				String pwr = pwrfield.getText();
-				LiberMinimis.log.info(pw);
-				LiberMinimis.log.info(pwr);
 				if (pw.equals(pwr) && pw != null && pw != "")
 				{
 					EncryptUtil.setPassword(null, pw);
-					//TODO Next stage
+					LiberMinimis.log.info("Starting main application");
+					hideStage();
+					new UIMain();
 				}
 				else if (pw == "" || pw == null)
 				{
