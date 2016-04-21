@@ -20,37 +20,40 @@ import javafx.stage.Stage;
 
 public class UILogin extends Stage
 {
-	private Label login = new Label(LanguageMap.translate("login.txt"));
-	private Button loginbtn = new Button(LanguageMap.translate("login.btn"));
-	private PasswordField pwfield = new PasswordField();
+	private final Label login = new Label(LanguageMap.translate("login.txt"));
+	private final Button loginbtn = new Button(LanguageMap.translate("login.btn"));
+	private final PasswordField pwfield = new PasswordField();
 	
 	public UILogin()
 	{
 		LiberMinimis.log.info("Starting a login screen");
 		this.setTitle(LanguageMap.translate("login.title"));
 		
-		HBox hbtop = new HBox();
-		HBox hbmiddle = new HBox();
-		HBox hbbottom = new HBox();
+		HBox[] hb = new HBox[]
+				{
+						new HBox(),
+						new HBox(),
+						new HBox()
+				};
+		
 		Label password = new Label(LanguageMap.translate("password.txt"));
 
 		VBox vb = new VBox();
 		
-		hbtop.setPadding(new Insets(9));
-		hbmiddle.setPadding(new Insets(9));
-		hbbottom.setPadding(new Insets(9));
+		for(HBox hbox: hb)
+		{
+			hbox.setPadding(new Insets(9));
+			hbox.setAlignment(Pos.CENTER);
+		}
 		
 		loginbtn.setOnAction(getLoginEvent());
 		pwfield.setOnAction(getLoginEvent());
 		
-		hbtop.getChildren().add(login);
-		hbtop.setAlignment(Pos.CENTER);
-		hbmiddle.getChildren().addAll(password, pwfield);
-		hbmiddle.setAlignment(Pos.CENTER);
-		hbbottom.getChildren().add(loginbtn);
-		hbbottom.setAlignment(Pos.CENTER);
+		hb[0].getChildren().add(login);
+		hb[1].getChildren().addAll(password, pwfield);
+		hb[2].getChildren().add(loginbtn);
 		
-		vb.getChildren().addAll(hbtop, hbmiddle, hbbottom);
+		vb.getChildren().addAll(hb);
 		
 		this.setScene(new Scene(vb, 250, 120));
 		this.setResizable(false);
@@ -62,10 +65,10 @@ public class UILogin extends Stage
 		this.hide();
 	}
 	
-	public EventHandler<ActionEvent> getLoginEvent()
+	private EventHandler<ActionEvent> getLoginEvent()
 	{
 		return new EventHandler<ActionEvent>()
-		{
+				{
 			@Override
 			public void handle(ActionEvent event)
 			{
@@ -82,6 +85,7 @@ public class UILogin extends Stage
 					new UIMain();
 				}
 			}
-		};
+				};
+		
 	}
 }

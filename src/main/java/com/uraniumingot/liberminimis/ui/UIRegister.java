@@ -19,44 +19,46 @@ import javafx.stage.Stage;
 
 public class UIRegister extends Stage
 {
-	private Label register = new Label(LanguageMap.translate("register.txt"));
-	private PasswordField pwfield = new PasswordField();
-	private PasswordField pwrfield = new PasswordField();
-	private Button registerbtn = new Button(LanguageMap.translate("register.btn"));
+	private final Label register = new Label(LanguageMap.translate("register.txt"));
+	private final PasswordField pwfield = new PasswordField();
+	private final PasswordField pwrfield = new PasswordField();
+	private final Button registerbtn = new Button(LanguageMap.translate("register.btn"));
 	
 	public UIRegister()
 	{
 		LiberMinimis.log.info("Starting a register screen");
 		this.setTitle(LanguageMap.translate("login.title"));
 		
-		HBox hbtop = new HBox();
-		HBox hbmiddletop = new HBox();
-		HBox hbmiddlebottom = new HBox();
-		HBox hbbottom = new HBox();
+		HBox[] hb = new HBox[]
+				{
+						new HBox(),
+						new HBox(),
+						new HBox(),
+						new HBox()
+				};
+		
+		
 		Label password = new Label(LanguageMap.translate("password.txt"));
 		Label password2 = new Label(LanguageMap.translate("passwordretype.txt"));
 
 		VBox vb = new VBox();
 		
-		hbtop.setPadding(new Insets(9));
-		hbmiddletop.setPadding(new Insets(9));
-		hbmiddlebottom.setPadding(new Insets(9));
-		hbbottom.setPadding(new Insets(9));
-
+		for(HBox hbox : hb)
+		{
+			hbox.setPadding(new Insets(9));
+			hbox.setAlignment(Pos.CENTER);
+		}
+		
 		pwfield.setOnAction(getRegisterEvent());
 		pwrfield.setOnAction(getRegisterEvent());
 		registerbtn.setOnAction(getRegisterEvent());
 		
-		hbtop.getChildren().add(register);
-		hbtop.setAlignment(Pos.CENTER);
-		hbmiddletop.getChildren().addAll(password, pwfield);
-		hbmiddletop.setAlignment(Pos.CENTER);
-		hbmiddlebottom.getChildren().addAll(password2, pwrfield);
-		hbmiddlebottom.setAlignment(Pos.CENTER);
-		hbbottom.getChildren().add(registerbtn);
-		hbbottom.setAlignment(Pos.CENTER);
+		hb[0].getChildren().add(register);
+		hb[1].getChildren().addAll(password, pwfield);
+		hb[2].getChildren().addAll(password2, pwrfield);
+		hb[3].getChildren().add(registerbtn);
 		
-		vb.getChildren().addAll(hbtop, hbmiddletop, hbmiddlebottom, hbbottom);
+		vb.getChildren().addAll(hb);
 		
 		this.setScene(new Scene(vb, 250, 160));
 		this.setResizable(false);
@@ -68,10 +70,10 @@ public class UIRegister extends Stage
 		this.hide();
 	}
 	
-	public EventHandler<ActionEvent> getRegisterEvent()
+	private EventHandler<ActionEvent> getRegisterEvent()
 	{
 		return new EventHandler<ActionEvent>()
-		{
+				{
 			@Override
 			public void handle(ActionEvent event)
 			{
@@ -95,6 +97,6 @@ public class UIRegister extends Stage
 					register.setTextFill(Color.RED);
 				}
 			}
-		};
+				};
 	}
 }

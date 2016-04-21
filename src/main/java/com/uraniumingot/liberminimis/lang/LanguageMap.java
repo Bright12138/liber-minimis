@@ -63,7 +63,7 @@ public class LanguageMap
 		String localized = lang.get(unlocalized);
 		if(localized != null)
 			return localized;
-		LiberMinimis.log.error("Could not find localization for key: " + unlocalized + "returning unlocalized text");
+		LiberMinimis.log.error("Could not find localization for key: '" + unlocalized + "'. Using unlocalized text");
 		return unlocalized;
 	}
 }

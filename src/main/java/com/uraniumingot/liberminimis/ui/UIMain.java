@@ -1,12 +1,15 @@
 package com.uraniumingot.liberminimis.ui;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
+import com.uraniumingot.liberminimis.ui.node.NodeBARMenu;
+import com.uraniumingot.liberminimis.ui.node.NodeBookMenu;
+import com.uraniumingot.liberminimis.ui.node.NodeHistoryMenu;
+import com.uraniumingot.liberminimis.ui.node.NodeLeftMenu;
+import com.uraniumingot.liberminimis.ui.node.NodeOtherMenu;
+import com.uraniumingot.liberminimis.ui.node.NodeUserMenu;
 
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class UIMain extends Stage
@@ -19,16 +22,37 @@ public class UIMain extends Stage
 		
 		borderpane = new BorderPane();
 		
-		VBox leftmenu = new VBox();
-		HBox topmenu = new HBox();
+		borderpane.setLeft(new NodeLeftMenu(this));
 		
-		leftmenu.setPadding(new Insets(9));
-		topmenu.setPadding(new Insets(9));
-		
-		borderpane.setLeft(leftmenu);
-		
-		
-		this.setScene(new Scene(borderpane, 800, 600));
+		switchBARMenu();
+		this.setMinHeight(768);
+		this.setMinWidth(1024);
+		this.setScene(new Scene(borderpane, 1024, 768));
 		this.show();
+	}
+	
+	public void switchBARMenu()
+	{
+		borderpane.setCenter(new NodeBARMenu());
+	}
+	
+	public void switchUserMenu()
+	{
+		borderpane.setCenter(new NodeUserMenu());
+	}
+	
+	public void switchBookMenu()
+	{
+		borderpane.setCenter(new NodeBookMenu());
+	}
+	
+	public void switchHistoryMenu()
+	{
+		borderpane.setCenter(new NodeHistoryMenu());
+	}
+	
+	public void switchOtherMenu()
+	{
+		borderpane.setCenter(new NodeOtherMenu());
 	}
 }
