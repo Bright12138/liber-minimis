@@ -16,6 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-include 'libs'
-
 rootProject.name = 'liber-minimis'
