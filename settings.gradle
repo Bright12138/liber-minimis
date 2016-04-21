@@ -18,4 +18,4 @@ include 'services:webservice'
 
 include 'libs'
 
-rootProject.name = 'BookAssist'
+rootProject.name = 'liber-minimis'

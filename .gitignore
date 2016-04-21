@@ -2,8 +2,8 @@
 /.gradle
 /build
 
-# ForgeGradle
-/run
+#JRebel
+*/rebel.xml
 
 # eclipse
 /eclipse
@@ -24,13 +24,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-MinecraftForge-License.txt
-MinecraftForge-Credits.txt
-LICENSE-fml.txt
-forge-1.7.10-10.13.0.1208-changelog.txt
-README.txt
-CREDITS-fml.txt
-libs/Baubles-1.8-1.1.0.0-api.zip
 gradlew.bat
 gradlew
 gradle/wrapper/gradle-wrapper.properties

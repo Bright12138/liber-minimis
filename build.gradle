@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-
+apply plugin: 'application'
+mainClassName = 'com.uraniumingot.liberminimis.LiberMinimis'
 
 repositories {
     jcenter()
@@ -13,7 +14,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
-    compile group: 'net.sf.jxls', name: 'jxls-core', version: '2.2.9'
+    compile group: 'org.jxls', name: 'jxls', version: '2.2.9'
     
     compile group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.8.11.2'
