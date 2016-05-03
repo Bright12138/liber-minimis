@@ -11,8 +11,8 @@ public class NodeOtherMenu extends TabPane
 			{
 					new Tab(LanguageMap.translate("main.other.setting.tab")),
 					new Tab(LanguageMap.translate("main.other.export.tab")),
-					new Tab(LanguageMap.translate("main.other.info.tab")),
-					new Tab(LanguageMap.translate("main.other.changepassword.tab"))
+					new Tab(LanguageMap.translate("main.other.changepassword.tab")),
+					new Tab(LanguageMap.translate("main.other.info.tab"))
 			};
 	
 	public NodeOtherMenu()

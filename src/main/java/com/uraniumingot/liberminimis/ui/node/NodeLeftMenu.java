@@ -23,7 +23,7 @@ public class NodeLeftMenu extends VBox
 	public NodeLeftMenu(UIMain uimain)
 	{
 		super();
-		this.setStyle("-fx-background-color: #3300cc;");
+		this.setStyle("-fx-background-color: #DAE6F3;");
 		this.setSpacing(20.0);
 		this.setPadding(new Insets(20));
 		this.setPrefWidth(200);

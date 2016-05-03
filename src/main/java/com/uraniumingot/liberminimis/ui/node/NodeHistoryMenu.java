@@ -22,7 +22,7 @@ public class NodeHistoryMenu extends TabPane
 		super();
 		
 		this.setTabMinHeight(50.0);
-		this.setTabMinWidth(100.0);
+		this.setTabMinWidth(120.0);
 		
 		for(Tab t : tabs)
 			t.setClosable(false);

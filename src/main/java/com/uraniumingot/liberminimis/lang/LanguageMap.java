@@ -66,4 +66,14 @@ public class LanguageMap
 		LiberMinimis.log.error("Could not find localization for key: '" + unlocalized + "'. Using unlocalized text");
 		return unlocalized;
 	}
+	
+	public static String translateWithFormat(String unlocalized, String... args)
+	{
+		String localized = lang.get(unlocalized);
+		if(localized == null)
+			return unlocalized;
+		if(localized.indexOf("%s") > -1)
+			return String.format(localized, (Object[]) args);
+		return localized;
+	}
 }
