@@ -3,6 +3,7 @@ package com.uraniumingot.liberminimis;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.uraniumingot.liberminimis.database.SQLDatabase;
 import com.uraniumingot.liberminimis.lib.Reference;
 import com.uraniumingot.liberminimis.ui.UILogin;
 import com.uraniumingot.liberminimis.ui.UIRegister;
@@ -18,6 +19,7 @@ public class LiberMinimis extends Application
 	
 	public static void main(String[] args)
 	{
+		SQLDatabase.init();
 		launch();
 	}
 	
