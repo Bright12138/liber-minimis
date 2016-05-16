@@ -8,6 +8,7 @@ import com.uraniumingot.liberminimis.lib.Reference;
 import com.uraniumingot.liberminimis.ui.UILogin;
 import com.uraniumingot.liberminimis.ui.UIRegister;
 import com.uraniumingot.liberminimis.util.EncryptUtil;
+import com.uraniumingot.liberminimis.util.SystemUtil;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ public class LiberMinimis extends Application
 	
 	public static void main(String[] args)
 	{
+		SystemUtil.initDataFolder();
 		SQLDatabase.init();
 		launch();
 	}

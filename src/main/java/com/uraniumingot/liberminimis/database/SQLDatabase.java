@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
+import com.uraniumingot.liberminimis.util.DBUtil;
 
 public class SQLDatabase 
 {
@@ -20,6 +21,7 @@ public class SQLDatabase
 	{
 		try
 		{
+			LiberMinimis.log.info("Initializing SQLDatabase");
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:Data/library.db");
 			statement = connection.createStatement();
@@ -38,38 +40,13 @@ public class SQLDatabase
 			ArrayList<String> tableNames = instance.getTableNames();
 			
 			if(!tableNames.contains("History"))
-				instance.createTable
-				(
-						"History",
-						"ID int NOT NULL",
-						"Date smalldatetime NOT NULL",
-						"BookID int NOT NULL",
-						"UserID int NOT NULL",
-						"Type tinyint NOT NULL",
-						"ReturnDate smalldatetime",
-						"PRIMARY KEY(ID)"
-				);
+				DBUtil.createHistoryDB();
+			if(!tableNames.contains("OnLend"))
+				DBUtil.createOnLendDB();
 			if(!tableNames.contains("Books"))
-				instance.createTable
-				(
-						"Books",
-						"ID int NOT NULL",
-						"Name nvarchar",
-						"AddedDate smalldatetime",
-						"LastTransaction int",
-						"State tinyint NOT NULL",
-						"PRIMARY KEY(ID)"
-				);
+				DBUtil.createBooksDB();
 			if(!tableNames.contains("Users"))
-				instance.createTable
-				(
-						"Users",
-						"ID int NOT NULL",
-						"Name nvarchar NOT NULL",
-						"AddedDate smalldatetime",
-						"Comments ntext",
-						"PRIMARY KEY(ID)"
-				);
+				DBUtil.createUsersDB();
 		} 
 		catch (SQLException e) 
 		{
@@ -85,6 +62,16 @@ public class SQLDatabase
 	public void insert(String table, String... values) throws SQLException
 	{
 		statement.executeUpdate(String.format("INSERT INTO %s VALUES (%s)", table, formatLabels(values)));
+	}
+	
+	public void update(String table, String columnChange, String value, String conditionColumn, String conditionValue) throws SQLException
+	{
+		statement.executeUpdate(String.format("UPDATE %s SET %s = %s WHERE %s = %s", table, columnChange, value, conditionColumn, conditionValue));
+	}
+	
+	public void remove(String table, String column, String value) throws SQLException
+	{
+		statement.executeUpdate(String.format("DELETE FROM %s WHERE %s = %s", table, column, value));
 	}
 	
 	public void createTable(String name, String... pars) throws SQLException
@@ -118,6 +105,14 @@ public class SQLDatabase
 		return names;
 	}
 	
+	public int getMaxID(String table) throws SQLException
+	{
+		ResultSet rs = statement.executeQuery(String.format("SELECT MAX(ID) AS maxID FROM %s", table));
+		rs.next();
+		return rs.getInt("maxID");
+		//Don't worry, it still returns a 0 if the max id is null
+	}
+	
 	private String formatLabels(String... label)
 	{
 		String formatted = "";
@@ -134,5 +129,4 @@ public class SQLDatabase
 		
 		return "";
 	}
-	
 }

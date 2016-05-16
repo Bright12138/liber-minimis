@@ -14,5 +14,4 @@ public class Reference
 	public static final File DATA_DIR = new File(System.getProperty("user.dir") + FILE_SEP + Reference.DATA_FOLDER_SUFFIX);
 	private static final String PASSWORD_FILE_LOCATION = DATA_DIR.getAbsolutePath() + FILE_SEP + "PasswordCache" + FileSuffix.BOOK_ASSIST_DATABASE;
 	public static final File PASSWORD_FILE = new File(PASSWORD_FILE_LOCATION);
-	public static final String DATABASE_FILE_LOCATION = null;
 }

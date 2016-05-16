@@ -1,8 +1,16 @@
 package com.uraniumingot.liberminimis.util;
 
+import com.uraniumingot.liberminimis.lib.Reference;
+
 public class SystemUtil 
 {
 	public static final String JAVA_VERSION = System.getProperty("java.version");
+	
+	public static void initDataFolder()
+	{
+		if(!Reference.DATA_DIR.exists())
+			Reference.DATA_DIR.mkdirs();
+	}
 	
 	public static int getJavaComparableVersion()
 	{
