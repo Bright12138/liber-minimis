@@ -1,11 +1,13 @@
 package com.uraniumingot.liberminimis.util;
 
+import java.security.InvalidParameterException;
 import java.sql.SQLException;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.database.EnumBookState;
 import com.uraniumingot.liberminimis.database.SQLDatabase;
 import com.uraniumingot.liberminimis.lib.Settings;
+import com.uraniumingot.liberminimis.ui.UIMessage;
 
 public class DBUtil 
 {
@@ -44,7 +46,7 @@ public class DBUtil
 				"History",
 				"ID INTEGER PRIMARY KEY NOT NULL",
 				"Date DATETIME NOT NULL",
-				"BookID INT NOT NULL UNIQUE",
+				"BookID INT NOT NULL",
 				"UserID INT NOT NULL",
 				"HistoryType TINYINT NOT NULL"
 		);
@@ -57,7 +59,7 @@ public class DBUtil
 			"OnLend",
 			"LendDate DATETIME PRIMARY KEY NOT NULL",
 			"ReturnDate DATETIME NOT NULL",
-			"BookID INT NOT NULL",
+			"BookID INT NOT NULL UNIQUE",
 			"UserID INT NOT NULL"
 		);
 	}
@@ -66,11 +68,15 @@ public class DBUtil
 	{
 		try 
 		{
-			SQLDatabase.getInstance().insert("Users", "NULL", String.format("'%s'", name), "DATETIME('NOW')", String.format("'%s'", comments), "1");
+			SQLDatabase.getInstance().insert("Users", "NULL", String.format("'%s'", filterString(name)), "DATETIME('NOW')", String.format("'%s'", filterString(comments)), "1");
 		}
 		catch (SQLException e) 
 		{
 			LiberMinimis.log.error(String.format("Failed to add user: %s to database!", name), e);
+		}
+		catch (InvalidParameterException e)
+		{
+			new UIMessage("message.invalidpar.txt");
 		}
 	}
 	
@@ -93,11 +99,15 @@ public class DBUtil
 	{
 		try
 		{
-			SQLDatabase.getInstance().insert("Books", "NULL", String.format("'%s'", name), "DATETIME('NOW')", String.format("'%s'", comments),fromInt(EnumBookState.Available.ordinal()));
+			SQLDatabase.getInstance().insert("Books", "NULL", String.format("'%s'", filterString(name)), "DATETIME('NOW')", String.format("'%s'", filterString(comments)),fromInt(EnumBookState.Available.ordinal()));
 		}
 		catch(SQLException e)
 		{
 			LiberMinimis.log.error(String.format("Failed to add book: %s to database!", name), e);
+		}
+		catch (InvalidParameterException e)
+		{
+			new UIMessage("message.invalidpar.txt");
 		}
 	}
 	
@@ -105,11 +115,15 @@ public class DBUtil
 	{
 		try
 		{
-			SQLDatabase.getInstance().insert("Books", "NULL", String.format("'%s'", name), "DATETIME('NOW')", String.format("'%s'", comments),fromInt(EnumBookState.OnHold.ordinal()));
+			SQLDatabase.getInstance().insert("Books", "NULL", String.format("'%s'", filterString(comments)), "DATETIME('NOW')", String.format("'%s'", filterString(comments)),fromInt(EnumBookState.OnHold.ordinal()));
 		}
 		catch(SQLException e)
 		{
 			LiberMinimis.log.error(String.format("Failed to add book: %s to database!", name), e);
+		}
+		catch (InvalidParameterException e)
+		{
+			new UIMessage("message.invalidpar.txt");
 		}
 	}
 	
@@ -181,5 +195,13 @@ public class DBUtil
 	private static String fromInt(int intString)
 	{
 		return new Integer(intString).toString();
+	}
+	
+	public static String filterString(String toFilter) throws InvalidParameterException
+	{
+		if(toFilter.indexOf("'") == -1)
+			return toFilter;
+		else
+			throw new InvalidParameterException(String.format("Invalid parameter '%s'!", toFilter));
 	}
 }

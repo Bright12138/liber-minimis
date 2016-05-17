@@ -79,14 +79,14 @@ public class UIRegister extends Stage
 			{
 				String pw = pwfield.getText();
 				String pwr = pwrfield.getText();
-				if (pw.equals(pwr) && pw != null && pw != "")
+				if (pw.equals(pwr) && pw != null && !pw.equals(""))
 				{
 					EncryptUtil.setPassword(null, pw);
 					LiberMinimis.log.info("Starting main application");
 					hideStage();
 					new UIMain();
 				}
-				else if (pw == "" || pw == null)
+				else if (pw.equals("") || pw == null)
 				{
 					register.setText(LanguageMap.translate("register.enterpassword"));
 					register.setTextFill(Color.RED);
