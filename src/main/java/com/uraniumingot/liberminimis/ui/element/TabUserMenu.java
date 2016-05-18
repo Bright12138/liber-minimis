@@ -1,11 +1,11 @@
-package com.uraniumingot.liberminimis.ui.node;
+package com.uraniumingot.liberminimis.ui.element;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class NodeUserMenu extends TabPane
+public class TabUserMenu extends TabPane
 {
 	private final Tab[] tabs = new Tab[]
 			{
@@ -14,7 +14,7 @@ public class NodeUserMenu extends TabPane
 					new Tab(LanguageMap.translate("main.viewuser.duebook.tab"))
 			};
 	
-	public NodeUserMenu()
+	public TabUserMenu()
 	{
 		super();
 		

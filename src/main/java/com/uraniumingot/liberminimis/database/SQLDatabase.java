@@ -94,6 +94,11 @@ public class SQLDatabase
 		return statement.executeQuery(String.format("SELECT %s FROM %s", formatLabels(labels),table));
 	}
 	
+	public ResultSet getTableWithCondition(String table, String formattedLabels, String condition) throws SQLException
+	{
+		return statement.executeQuery(String.format("SELECT %s FROM %s WHERE %s", formattedLabels, table, condition));
+	}
+	
 	public ArrayList<String> getTableNames() throws SQLException
 	{
 		ArrayList<String> names = new ArrayList<String>();

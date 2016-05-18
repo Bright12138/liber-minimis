@@ -1,4 +1,4 @@
-package com.uraniumingot.liberminimis.ui.node;
+package com.uraniumingot.liberminimis.ui.element;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 import com.uraniumingot.liberminimis.ui.UIMain;
@@ -9,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class NodeLeftMenu extends VBox
+public class TabLeftMenu extends VBox
 {
 	private final Button[] buttons = new Button[]
 			{
@@ -20,7 +20,7 @@ public class NodeLeftMenu extends VBox
 				new Button(LanguageMap.translate("main.other.btn"))
 			};
 	
-	public NodeLeftMenu(UIMain uimain)
+	public TabLeftMenu(UIMain uimain)
 	{
 		super();
 		this.setStyle("-fx-background-color: #DAE6F3;");

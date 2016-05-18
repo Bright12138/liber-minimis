@@ -1,6 +1,7 @@
 package com.uraniumingot.liberminimis.util;
 
 import java.security.InvalidParameterException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
@@ -16,13 +17,13 @@ public class DBUtil
 	{
 		SQLDatabase.getInstance().createTable
 		(
-				"Users",
-				//The NOT NULL needs to be there, I've checked
-				"ID INTEGER PRIMARY KEY NOT NULL",
-				"Name NVARCHAR NOT NULL",
-				"AddedDate DATETIME",
-				"Comments NTEXT",
-				"AllowBorrow BIT NOT NULL"
+			"Users",
+			//The NOT NULL needs to be there, I've checked
+			"ID INTEGER PRIMARY KEY NOT NULL",
+			"Name NVARCHAR NOT NULL",
+			"AddedDate DATETIME",
+			"Comments NTEXT",
+			"AllowBorrow BIT NOT NULL"
 		);
 	}
 	
@@ -30,12 +31,12 @@ public class DBUtil
 	{
 		SQLDatabase.getInstance().createTable
 		(
-				"Books",
-				"ID INTEGER PRIMARY KEY NOT NULL",
-				"Name NVARCHAR",
-				"AddedDate DATETIME",
-				"Comments NTEXT",
-				"BookState TINYINT NOT NULL"
+			"Books",
+			"ID INTEGER PRIMARY KEY NOT NULL",
+			"Name NVARCHAR",
+			"AddedDate DATETIME",
+			"Comments NTEXT",
+			"BookState TINYINT NOT NULL"
 		);
 	}
 	
@@ -43,12 +44,12 @@ public class DBUtil
 	{
 		SQLDatabase.getInstance().createTable
 		(
-				"History",
-				"ID INTEGER PRIMARY KEY NOT NULL",
-				"Date DATETIME NOT NULL",
-				"BookID INT NOT NULL",
-				"UserID INT NOT NULL",
-				"HistoryType TINYINT NOT NULL"
+			"History",
+			"ID INTEGER PRIMARY KEY NOT NULL",
+			"Date DATETIME NOT NULL",
+			"BookID INT NOT NULL",
+			"UserID INT NOT NULL",
+			"HistoryType TINYINT NOT NULL"
 		);
 	}
 	
@@ -194,7 +195,7 @@ public class DBUtil
 	
 	private static String fromInt(int intString)
 	{
-		return new Integer(intString).toString();
+		return String.valueOf(intString);
 	}
 	
 	public static String filterString(String toFilter) throws InvalidParameterException
@@ -203,5 +204,37 @@ public class DBUtil
 			return toFilter;
 		else
 			throw new InvalidParameterException(String.format("Invalid parameter '%s'!", toFilter));
+	}
+	
+	public static String getUserNameFromID(int ID)
+	{
+		String name = "";
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "Name", String.format("ID = %s", ID));
+			rs.next();
+			name = rs.getString("Name");
+		} 
+		catch (SQLException e) 
+		{
+			LiberMinimis.log.error("Failed to cache username!", e);;
+		}
+		return name;
+	}
+	
+	public static String getBookNameFromID(int ID)
+	{
+		String name = "";
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "Name", String.format("ID = %s", ID));
+			rs.next();
+			name = rs.getString("Name");
+		}
+		catch (SQLException e)
+		{
+			LiberMinimis.log.error("Failed to cache bookname!", e);
+		}
+		return name;
 	}
 }

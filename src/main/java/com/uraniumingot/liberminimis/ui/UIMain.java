@@ -1,12 +1,12 @@
 package com.uraniumingot.liberminimis.ui;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
-import com.uraniumingot.liberminimis.ui.node.NodeBARMenu;
-import com.uraniumingot.liberminimis.ui.node.NodeBookMenu;
-import com.uraniumingot.liberminimis.ui.node.NodeHistoryMenu;
-import com.uraniumingot.liberminimis.ui.node.NodeLeftMenu;
-import com.uraniumingot.liberminimis.ui.node.NodeOtherMenu;
-import com.uraniumingot.liberminimis.ui.node.NodeUserMenu;
+import com.uraniumingot.liberminimis.ui.element.TabBARMenu;
+import com.uraniumingot.liberminimis.ui.element.TabBookMenu;
+import com.uraniumingot.liberminimis.ui.element.TabHistoryMenu;
+import com.uraniumingot.liberminimis.ui.element.TabLeftMenu;
+import com.uraniumingot.liberminimis.ui.element.TabMiscMenu;
+import com.uraniumingot.liberminimis.ui.element.TabUserMenu;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -22,7 +22,7 @@ public class UIMain extends Stage
 		
 		borderpane = new BorderPane();
 		
-		borderpane.setLeft(new NodeLeftMenu(this));
+		borderpane.setLeft(new TabLeftMenu(this));
 		
 		switchBARMenu();
 		this.setMinHeight(768);
@@ -33,26 +33,26 @@ public class UIMain extends Stage
 	
 	public void switchBARMenu()
 	{
-		borderpane.setCenter(new NodeBARMenu());
+		borderpane.setCenter(new TabBARMenu());
 	}
 	
 	public void switchUserMenu()
 	{
-		borderpane.setCenter(new NodeUserMenu());
+		borderpane.setCenter(new TabUserMenu());
 	}
 	
 	public void switchBookMenu()
 	{
-		borderpane.setCenter(new NodeBookMenu());
+		borderpane.setCenter(new TabBookMenu());
 	}
 	
 	public void switchHistoryMenu()
 	{
-		borderpane.setCenter(new NodeHistoryMenu());
+		borderpane.setCenter(new TabHistoryMenu());
 	}
 	
 	public void switchOtherMenu()
 	{
-		borderpane.setCenter(new NodeOtherMenu());
+		borderpane.setCenter(new TabMiscMenu());
 	}
 }

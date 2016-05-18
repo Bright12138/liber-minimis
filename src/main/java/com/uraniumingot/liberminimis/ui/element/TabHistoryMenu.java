@@ -1,11 +1,11 @@
-package com.uraniumingot.liberminimis.ui.node;
+package com.uraniumingot.liberminimis.ui.element;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class NodeHistoryMenu extends TabPane
+public class TabHistoryMenu extends TabPane
 {
 	private final Tab[] tabs = new Tab[]
 			{
@@ -17,7 +17,7 @@ public class NodeHistoryMenu extends TabPane
 				new Tab(LanguageMap.translate("main.history.alldamaged.tab"))
 			};
 	
-	public NodeHistoryMenu()
+	public TabHistoryMenu()
 	{
 		super();
 		
