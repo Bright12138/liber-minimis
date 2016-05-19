@@ -3,11 +3,16 @@ package com.uraniumingot.liberminimis.util;
 import java.security.InvalidParameterException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.database.EnumBookState;
+import com.uraniumingot.liberminimis.database.EnumHistoryType;
 import com.uraniumingot.liberminimis.database.SQLDatabase;
 import com.uraniumingot.liberminimis.lib.Settings;
+import com.uraniumingot.liberminimis.ui.UIDropDownMessage;
 import com.uraniumingot.liberminimis.ui.UIMessage;
 
 public class DBUtil 
@@ -157,6 +162,7 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().insert("OnLend", "DATETIME('NOW')", calculateReturnDate(),fromInt(BookID),fromInt(UserID));
+			addHistory(BookID, UserID, EnumHistoryType.Borrow.ordinal());
 		}
 		catch(SQLException e)
 		{
@@ -169,6 +175,10 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().remove("OnLend", "BookID",fromInt(BookID));
+			if(isDue(BookID))
+				addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.ReturnDue.ordinal());
+			else
+				addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.Return.ordinal());
 		}
 		catch(SQLException e)
 		{
@@ -181,6 +191,7 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().update("OnLend", "ReturnDate", String.format("DATETIME(ReturnDate, '+%s Day')", extendedDays), "BookID",fromInt(BookID));
+			addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.Renew.ordinal());
 		}
 		catch(SQLException e)
 		{
@@ -212,8 +223,8 @@ public class DBUtil
 		try
 		{
 			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "Name", String.format("ID = %s", ID));
-			rs.next();
-			name = rs.getString("Name");
+			if(rs.next())
+				name = rs.getString("Name");
 		} 
 		catch (SQLException e) 
 		{
@@ -222,19 +233,200 @@ public class DBUtil
 		return name;
 	}
 	
+	public static int getIDFromUserName(String name)
+	{
+		int id = -1;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "ID", String.format("Name = %s", filterString(name)));
+			if(rs.next())
+				id = rs.getInt("ID");
+			if(rs.next())
+			{
+				ArrayList<String> ids = new ArrayList<String>();
+				ids.add(String.valueOf(id));
+				do 
+					ids.add(String.valueOf(rs.getInt("ID")));
+				while(rs.next());
+				UIDropDownMessage choose = new UIDropDownMessage("dropdown.pickid.txt", ids);
+				return choose.getResult();
+			}
+		}
+		catch(InvalidParameterException e)
+		{
+			new UIMessage("message.invalidpar.txt");
+		}
+		catch(SQLException e)
+		{
+			return -1;
+		}
+		return id;
+	}
+	
 	public static String getBookNameFromID(int ID)
 	{
 		String name = "";
 		try
 		{
 			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "Name", String.format("ID = %s", ID));
-			rs.next();
-			name = rs.getString("Name");
+			if(rs.next())
+				name = rs.getString("Name");
 		}
 		catch (SQLException e)
 		{
 			LiberMinimis.log.error("Failed to cache bookname!", e);
 		}
 		return name;
+	}
+	
+	public static int getIDFromBookName(String name)
+	{
+		int id = -1;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "ID", String.format("Name = %s", filterString(name)));
+			if(rs.next())
+				id = rs.getInt("ID");
+			if(rs.next())
+			{
+				ArrayList<String> ids = new ArrayList<String>();
+				ids.add(String.valueOf(id));
+				do 
+					ids.add(String.valueOf(rs.getInt("ID")));
+				while(rs.next());
+				UIDropDownMessage choose = new UIDropDownMessage("dropdown.pickid.txt", ids);
+				return choose.getResult();
+			}
+		}
+		catch(InvalidParameterException e)
+		{
+			new UIMessage("message.invalidpar.txt");
+		}
+		catch(SQLException e)
+		{
+			return -1;
+		}
+		return id;
+	}
+	
+	public static boolean inLendList(int bookID)
+	{
+		boolean hasID = false;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "1", String.format("BookID = %s", bookID));
+			if(rs.next())
+				hasID = rs.getBoolean("ID");
+		}
+		catch (SQLException e)
+		{
+			LiberMinimis.log.error("Failed to check whether the book is in lend list!", e);
+		}
+		return hasID;
+	}
+	
+	public static boolean existsAsBookID(int ID)
+	{
+		boolean hasName = false;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "1", String.format("ID = %s", ID));
+			hasName = rs.next();
+		}
+		catch (SQLException e)
+		{
+			LiberMinimis.log.error("Failed to check whether the book exists!", e);
+		}
+		return hasName;
+	}
+	
+	public static boolean existsAsUserID(int ID)
+	{
+		boolean hasName = false;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "1", String.format("ID = %s", ID));
+			hasName = rs.next();
+		}
+		catch (SQLException e)
+		{
+			LiberMinimis.log.error("Failed to check whether the user exists!", e);
+		}
+		return hasName;
+	}
+	
+	public static boolean isDue(int bookID)
+	{
+		Timestamp now = new Timestamp(new Date().getTime());
+		Timestamp rd = null;;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "ReturnDate", String.format("BookID = %s", bookID));
+			if(rs.next())
+				rd = rs.getTimestamp("ReturnDate");
+		}
+		catch (SQLException e)
+		{
+			LiberMinimis.log.error("Failed to get return time!", e);
+		}
+		if(now.after(rd))
+			return true;
+		return false;
+	}
+	
+	public static int getValidBookID(String anything)
+	{
+		int bookID = -1;
+		if(anything.equals(""))
+			return bookID;
+		try
+		{
+			bookID = Integer.parseInt(anything);
+			if(existsAsBookID(bookID))
+				return bookID;
+			else
+				bookID = -1;
+		}
+		catch(Exception e)
+		{
+			bookID = getIDFromBookName(anything);
+		}
+		return bookID;
+	}
+	
+	public static int getUserIDInLend(int bookID)
+	{
+		int userID = -1;
+		try
+		{
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "UserID", String.format("BookID = %s", bookID));
+			if(rs.next())
+				userID = rs.getInt("UserID");
+		}
+		catch(SQLException e)
+		{
+			LiberMinimis.log.error("Failed to get user id from lend list!", e);
+		}
+		return userID;
+	}
+	
+	public static int getValidUserID(String anything)
+	{
+		int userID = -1;
+		if(anything.equals(""))
+			return userID;
+		try
+		{
+			userID = Integer.parseInt(anything);
+			if(existsAsUserID(userID))
+				return userID;
+			else
+				userID = -1;
+		}
+		catch(Exception e)
+		{
+			userID = getIDFromBookName(anything);
+		}
+		return userID;
 	}
 }

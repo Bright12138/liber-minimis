@@ -77,6 +77,7 @@ public class UILogin extends Stage
 				{
 					login.setText(LanguageMap.translate("login.wrongpassword"));
 					login.setTextFill(Color.RED);
+					pwfield.setText("");
 				}
 				else
 				{

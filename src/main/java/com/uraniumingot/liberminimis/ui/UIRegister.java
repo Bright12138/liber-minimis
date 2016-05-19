@@ -90,11 +90,15 @@ public class UIRegister extends Stage
 				{
 					register.setText(LanguageMap.translate("register.enterpassword"));
 					register.setTextFill(Color.RED);
+					pwfield.setText("");
+					pwrfield.setText("");
 				}
 				else
 				{
 					register.setText(LanguageMap.translate("register.wrongpassword"));
 					register.setTextFill(Color.RED);
+					pwfield.setText("");
+					pwrfield.setText("");
 				}
 			}
 				};
