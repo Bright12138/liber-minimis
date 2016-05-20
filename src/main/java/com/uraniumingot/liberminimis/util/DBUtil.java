@@ -90,10 +90,7 @@ public class DBUtil
 	{
 		try
 		{
-			if(allowBorrow)
-				SQLDatabase.getInstance().update("Users", "AllowBorrow", "1", "UserID", fromInt(UserID));
-			else
-				SQLDatabase.getInstance().update("Users", "AllowBorrow", "0", "UserID", fromInt(UserID));
+				SQLDatabase.getInstance().update("Users", "AllowBorrow", allowBorrow ? "1" : "0", "UserID", fromInt(UserID));
 		}
 		catch (SQLException e) 
 		{
@@ -162,6 +159,9 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().insert("OnLend", "DATETIME('NOW')", calculateReturnDate(),fromInt(BookID),fromInt(UserID));
+			
+			setBookState(BookID, EnumBookState.OnLend.ordinal());
+			
 			addHistory(BookID, UserID, EnumHistoryType.Borrow.ordinal());
 		}
 		catch(SQLException e)
@@ -175,10 +175,11 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().remove("OnLend", "BookID",fromInt(BookID));
-			if(isDue(BookID))
-				addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.ReturnDue.ordinal());
-			else
-				addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.Return.ordinal());
+			
+			setBookState(BookID, EnumBookState.Available.ordinal());
+			
+			addHistory(BookID, getUserIDInLend(BookID), isDue(BookID) ? EnumHistoryType.ReturnDue.ordinal() : EnumHistoryType.Return.ordinal());
+
 		}
 		catch(SQLException e)
 		{
@@ -191,6 +192,7 @@ public class DBUtil
 		try
 		{
 			SQLDatabase.getInstance().update("OnLend", "ReturnDate", String.format("DATETIME(ReturnDate, '+%s Day')", extendedDays), "BookID",fromInt(BookID));
+			
 			addHistory(BookID, getUserIDInLend(BookID), EnumHistoryType.Renew.ordinal());
 		}
 		catch(SQLException e)
@@ -233,12 +235,12 @@ public class DBUtil
 		return name;
 	}
 	
-	public static int getIDFromUserName(String name)
+	public static int getIDFromUserName(String name, boolean ignoreExpired)
 	{
 		int id = -1;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "ID", String.format("Name = %s", filterString(name)));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "ID", String.format(ignoreExpired ? "Name = %s AND AllowBorrow = 1" : "Name = %s", filterString(name)));
 			if(rs.next())
 				id = rs.getInt("ID");
 			if(rs.next())
@@ -279,12 +281,12 @@ public class DBUtil
 		return name;
 	}
 	
-	public static int getIDFromBookName(String name)
+	public static int getIDFromBookName(String name, boolean onlyAvaliable)
 	{
 		int id = -1;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "ID", String.format("Name = %s", filterString(name)));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "ID", String.format(onlyAvaliable ? "Name = %s AND BookState <> 0" : "Name = %s", filterString(name)));
 			if(rs.next())
 				id = rs.getInt("ID");
 			if(rs.next())
@@ -325,12 +327,12 @@ public class DBUtil
 		return hasID;
 	}
 	
-	public static boolean existsAsBookID(int ID)
+	public static boolean existsAsBookID(int ID, boolean onlyAvaliable)
 	{
 		boolean hasName = false;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "1", String.format("ID = %s", ID));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Books", "1", String.format(onlyAvaliable ? "ID = %s AND Bookstate = 1" : "ID = %s", ID));
 			hasName = rs.next();
 		}
 		catch (SQLException e)
@@ -340,12 +342,12 @@ public class DBUtil
 		return hasName;
 	}
 	
-	public static boolean existsAsUserID(int ID)
+	public static boolean existsAsUserID(int ID, boolean ignoreExpired)
 	{
 		boolean hasName = false;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "1", String.format("ID = %s", ID));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("Users", "1", String.format(ignoreExpired ? "ID = %s AND AllowBorrow = 1" : "ID = %s", ID));
 			hasName = rs.next();
 		}
 		catch (SQLException e)
@@ -374,7 +376,7 @@ public class DBUtil
 		return false;
 	}
 	
-	public static int getValidBookID(String anything)
+	public static int getValidBookID(String anything, boolean onlyAvaliable)
 	{
 		int bookID = -1;
 		if(anything.equals(""))
@@ -382,14 +384,14 @@ public class DBUtil
 		try
 		{
 			bookID = Integer.parseInt(anything);
-			if(existsAsBookID(bookID))
+			if(existsAsBookID(bookID, onlyAvaliable))
 				return bookID;
 			else
 				bookID = -1;
 		}
 		catch(Exception e)
 		{
-			bookID = getIDFromBookName(anything);
+			bookID = getIDFromBookName(anything, onlyAvaliable);
 		}
 		return bookID;
 	}
@@ -410,7 +412,7 @@ public class DBUtil
 		return userID;
 	}
 	
-	public static int getValidUserID(String anything)
+	public static int getValidUserID(String anything, boolean ignoreExpired)
 	{
 		int userID = -1;
 		if(anything.equals(""))
@@ -418,14 +420,14 @@ public class DBUtil
 		try
 		{
 			userID = Integer.parseInt(anything);
-			if(existsAsUserID(userID))
+			if(existsAsUserID(userID, ignoreExpired))
 				return userID;
 			else
 				userID = -1;
 		}
 		catch(Exception e)
 		{
-			userID = getIDFromBookName(anything);
+			userID = getIDFromBookName(anything, ignoreExpired);
 		}
 		return userID;
 	}

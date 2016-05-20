@@ -11,7 +11,8 @@ public class TabBARMenu extends TabPane
 	private final Tab[] tabs = new Tab[]
 			{
 					new Tab(LanguageMap.translate("main.borrowreturn.borrow.tab")),
-					new Tab(LanguageMap.translate("main.borrowreturn.return.tab"))
+					new Tab(LanguageMap.translate("main.borrowreturn.return.tab")),
+					new Tab(LanguageMap.translate("main.borrowreturn.renew.tab"))
 			};
 	
 	public TabBARMenu()
@@ -24,8 +25,8 @@ public class TabBARMenu extends TabPane
 		for (Tab t : tabs)
 			t.setClosable(false);
 		
-		tabs[0].setContent(new NodeBorrowMenu());
-		tabs[1].setContent(new NodeReturnMenu());
+		tabs[0].setContent(new ElementBorrowMenu());
+		tabs[1].setContent(new ElementReturnMenu());
 		
 		this.getTabs().addAll(tabs);
 	}

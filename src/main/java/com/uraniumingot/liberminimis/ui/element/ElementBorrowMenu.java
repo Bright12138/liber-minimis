@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class NodeBorrowMenu extends VBox
+public class ElementBorrowMenu extends VBox
 {
 	private final Label infolabel = new Label(LanguageMap.translate("main.borrowreturn.borrow.txt"));
 	private final Label booklabel = new Label(LanguageMap.translate("main.borrowreturn.bookid"));
@@ -23,7 +23,7 @@ public class NodeBorrowMenu extends VBox
 	private final TextField userfield = new TextField();
 	private final Button confirmbtn = new Button(LanguageMap.translate("ok.btn"));
 	
-	public NodeBorrowMenu()
+	public ElementBorrowMenu()
 	{
 		
 		this.setAlignment(Pos.CENTER);
@@ -38,6 +38,8 @@ public class NodeBorrowMenu extends VBox
 		for(HBox hb : hboxs)
 			hb.setAlignment(Pos.CENTER);
 		
+		bookfield.setOnAction(getBorrowEvent());
+		userfield.setOnAction(getBorrowEvent());
 		confirmbtn.setOnAction(getBorrowEvent());
 		
 		this.setSpacing(20.0);
@@ -69,8 +71,8 @@ public class NodeBorrowMenu extends VBox
 		String bft = bookfield.getText();
 		String uft = userfield.getText();
 		
-		int book = DBUtil.getValidBookID(bft);
-		int user = DBUtil.getValidUserID(uft);
+		int book = DBUtil.getValidBookID(bft, true);
+		int user = DBUtil.getValidUserID(uft, true);
 		
 		if(book != -1 && user != -1)//Successful
 		{

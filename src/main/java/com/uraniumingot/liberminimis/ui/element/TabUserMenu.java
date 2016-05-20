@@ -24,6 +24,8 @@ public class TabUserMenu extends TabPane
 		for (Tab t : tabs)
 			t.setClosable(false);
 		
+		tabs[0].setContent(new ElementViewAllUserMenu());
+		
 		this.getTabs().addAll(tabs);
 	}
 	
