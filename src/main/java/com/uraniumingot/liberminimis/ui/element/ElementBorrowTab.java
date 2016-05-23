@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ElementBorrowMenu extends VBox
+public class ElementBorrowTab extends VBox
 {
 	private final Label infolabel = new Label(LanguageMap.translate("main.borrowreturn.borrow.txt"));
 	private final Label booklabel = new Label(LanguageMap.translate("main.borrowreturn.bookid"));
@@ -23,7 +23,7 @@ public class ElementBorrowMenu extends VBox
 	private final TextField userfield = new TextField();
 	private final Button confirmbtn = new Button(LanguageMap.translate("ok.btn"));
 	
-	public ElementBorrowMenu()
+	public ElementBorrowTab()
 	{
 		
 		this.setAlignment(Pos.CENTER);

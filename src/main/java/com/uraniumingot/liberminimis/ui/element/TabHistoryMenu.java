@@ -9,12 +9,7 @@ public class TabHistoryMenu extends TabPane
 {
 	private final Tab[] tabs = new Tab[]
 			{
-				new Tab(LanguageMap.translate("main.history.user.tab")),
-				new Tab(LanguageMap.translate("main.history.alluser.tab")),
-				new Tab(LanguageMap.translate("main.history.book.tab")),
-				new Tab(LanguageMap.translate("main.history.allbook.tab")),
-				new Tab(LanguageMap.translate("main.history.damaged.tab")),
-				new Tab(LanguageMap.translate("main.history.alldamaged.tab"))
+				new Tab(LanguageMap.translate("main.history.all.tab")),
 			};
 	
 	public TabHistoryMenu()
@@ -26,6 +21,8 @@ public class TabHistoryMenu extends TabPane
 		
 		for(Tab t : tabs)
 			t.setClosable(false);
+		
+		tabs[0].setContent(new ElementHistoryTab());
 		
 		this.getTabs().addAll(tabs);
 	}

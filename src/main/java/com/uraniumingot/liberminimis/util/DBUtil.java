@@ -66,7 +66,8 @@ public class DBUtil
 			"LendDate DATETIME PRIMARY KEY NOT NULL",
 			"ReturnDate DATETIME NOT NULL",
 			"BookID INT NOT NULL UNIQUE",
-			"UserID INT NOT NULL"
+			"UserID INT NOT NULL",
+			"IsDamaged BIT NOT NULL"
 		);
 	}
 	
@@ -158,7 +159,7 @@ public class DBUtil
 	{
 		try
 		{
-			SQLDatabase.getInstance().insert("OnLend", "DATETIME('NOW')", calculateReturnDate(),fromInt(BookID),fromInt(UserID));
+			SQLDatabase.getInstance().insert("OnLend", "DATETIME('NOW')", calculateReturnDate(),fromInt(BookID),fromInt(UserID), "0");
 			
 			setBookState(BookID, EnumBookState.OnLend.ordinal());
 			
@@ -311,12 +312,12 @@ public class DBUtil
 		return id;
 	}
 	
-	public static boolean inLendList(int bookID)
+	public static boolean inLendList(int bookID, boolean includeDamaged)
 	{
 		boolean hasID = false;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "1", String.format("BookID = %s", bookID));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "1", includeDamaged ? String.format("BookID = %s", bookID) : String.format("BookID = %s,  AND IsDamaged = 0", bookID));
 			if(rs.next())
 				hasID = rs.getBoolean("ID");
 		}
@@ -363,7 +364,7 @@ public class DBUtil
 		Timestamp rd = null;;
 		try
 		{
-			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "ReturnDate", String.format("BookID = %s", bookID));
+			ResultSet rs = SQLDatabase.getInstance().getTableWithCondition("OnLend", "ReturnDate", String.format("BookID = %s AND IsDamaged = 0", bookID));
 			if(rs.next())
 				rd = rs.getTimestamp("ReturnDate");
 		}

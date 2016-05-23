@@ -17,13 +17,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-public class ElementViewAllUserMenu extends VBox
+public class ElementAllBooksTab extends VBox
 {
 	private final TableView<String> table = new TableView<String>();
 	private final TextField nameField = new TextField();
 	private final TextField commentField = new TextField();
-	private final Button addUserButton = new Button(LanguageMap.translate("adduser.btn"));
-	private final ElementSearchBar searchBar = new ElementSearchBar(SearchType.TypeUserID, SearchType.TypeUserName, SearchType.TypeUserComment, SearchType.TypeUserAddedTime)
+	private final Button addUserButton = new Button(LanguageMap.translate("addbook.btn"));
+	private final ElementSearchBar searchBar = new ElementSearchBar(SearchType.TypeBookID, SearchType.TypeBookName, SearchType.TypeBookComment, SearchType.TypeBookAddedTime)
 			{
 		@Override
 		public void onSearch(String text, SearchType type)
@@ -32,19 +32,19 @@ public class ElementViewAllUserMenu extends VBox
 		}
 			};
 	
-	public ElementViewAllUserMenu()
+	public ElementAllBooksTab()
 	{
-		nameField.setPromptText(LanguageMap.translate("adduser.name"));
-		commentField.setPromptText(LanguageMap.translate("adduser.comment"));
-		commentField.setMinWidth(560);
+		nameField.setPromptText(LanguageMap.translate("addbook.name"));
+		commentField.setPromptText(LanguageMap.translate("addbook.comment"));
+		commentField.setMinWidth(585);
 		
 		addUserButton.setOnAction(getAddUserEvent());
 		
-		TableColumn<String, String> idcol = new TableColumn<>(LanguageMap.translate("users.id"));
-		TableColumn<String, String> namecol = new TableColumn<>(LanguageMap.translate("users.name"));
-		TableColumn<String, String> addedcol = new TableColumn<>(LanguageMap.translate("users.added"));
-		TableColumn<String, String> commentcol = new TableColumn<>(LanguageMap.translate("users.comment"));
-		TableColumn<String, String> delcol = new TableColumn<>(LanguageMap.translate("users.del"));
+		TableColumn<String, String> idcol = new TableColumn<>(LanguageMap.translate("books.id"));
+		TableColumn<String, String> namecol = new TableColumn<>(LanguageMap.translate("books.name"));
+		TableColumn<String, String> addedcol = new TableColumn<>(LanguageMap.translate("books.added"));
+		TableColumn<String, String> commentcol = new TableColumn<>(LanguageMap.translate("books.comment"));
+		TableColumn<String, String> delcol = new TableColumn<>(LanguageMap.translate("books.opt"));
 		
 		delcol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
 		
@@ -56,7 +56,7 @@ public class ElementViewAllUserMenu extends VBox
 			{
 				return new TableCell<String, String>()
 				{
-					Button delbtn = new Button(LanguageMap.translate("del.btn"));
+					Button optbtn = new Button(LanguageMap.translate("opt.btn"));
 					
 					@Override
 					public void updateItem(String item, boolean empty)
@@ -69,7 +69,7 @@ public class ElementViewAllUserMenu extends VBox
 						}
 						else
 						{
-							delbtn.setOnAction( new EventHandler<ActionEvent>()
+							optbtn.setOnAction( new EventHandler<ActionEvent>()
 							{
 								@Override
 								public void handle(ActionEvent event)
@@ -77,7 +77,7 @@ public class ElementViewAllUserMenu extends VBox
 									
 								}
 							});
-							setGraphic(delbtn);
+							setGraphic(optbtn);
 							setText(null);
 						}
 					}

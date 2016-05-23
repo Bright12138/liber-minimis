@@ -14,14 +14,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ElementReturnMenu extends VBox
+public class ElementReturnTab extends VBox
 {
 	private final Label infolabel = new Label(LanguageMap.translate("main.borrowreturn.return.txt"));
 	private final Label booklabel = new Label(LanguageMap.translate("main.borrowreturn.bookid"));
 	private final TextField bookfield = new TextField();
 	private final Button confirmbtn = new Button(LanguageMap.translate("ok.btn"));
 	
-	public ElementReturnMenu()
+	public ElementReturnTab()
 	{
 		
 		this.setAlignment(Pos.CENTER);

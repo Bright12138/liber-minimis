@@ -19,7 +19,7 @@ public abstract class ElementSearchBar extends HBox
 	public ElementSearchBar(SearchType... searchTypes)
 	{
 		searchField.setPromptText(LanguageMap.translate("search.txt"));
-		searchField.setMinWidth(650);
+		setMinWidth();
 		searchType.getItems().addAll(searchTypes);
 		searchType.setPromptText(LanguageMap.translate("searchtype.info"));
 		
@@ -27,7 +27,17 @@ public abstract class ElementSearchBar extends HBox
 		searchField.setOnAction(getSearchEvent());
 		
 		this.setSpacing(3);
+		addToBar();
+	}
+	
+	protected void addToBar()
+	{
 		this.getChildren().addAll(searchField, searchType, searchButton);
+	}
+	
+	protected void setMinWidth()
+	{
+		searchField.setMinWidth(665);
 	}
 	
 	public abstract void onSearch(String text, SearchType type);

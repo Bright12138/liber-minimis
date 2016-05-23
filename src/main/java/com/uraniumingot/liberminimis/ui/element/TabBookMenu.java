@@ -11,7 +11,7 @@ public class TabBookMenu extends TabPane
 			{
 					new Tab(LanguageMap.translate("main.viewbook.all.tab")),
 					new Tab(LanguageMap.translate("main.viewbook.damaged.tab")),
-					new Tab(LanguageMap.translate("main.viewbook.due.tab"))
+					new Tab(LanguageMap.translate("main.viewbook.onhold.tab"))
 			};
 	
 	public TabBookMenu()
@@ -23,6 +23,10 @@ public class TabBookMenu extends TabPane
 		
 		for(Tab t : tabs)
 			t.setClosable(false);
+		
+		tabs[0].setContent(new ElementAllBooksTab());
+		tabs[1].setContent(new ElementDamagedTab());
+		tabs[2].setContent(new ElementOnHoldTab());
 		
 		this.getTabs().addAll(tabs);
 	}

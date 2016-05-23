@@ -12,7 +12,8 @@ public class TabBARMenu extends TabPane
 			{
 					new Tab(LanguageMap.translate("main.borrowreturn.borrow.tab")),
 					new Tab(LanguageMap.translate("main.borrowreturn.return.tab")),
-					new Tab(LanguageMap.translate("main.borrowreturn.renew.tab"))
+					new Tab(LanguageMap.translate("main.borrowreturn.renew.tab")),
+					new Tab(LanguageMap.translate("main.borrowreturn.reportdue.tab"))
 			};
 	
 	public TabBARMenu()
@@ -25,8 +26,10 @@ public class TabBARMenu extends TabPane
 		for (Tab t : tabs)
 			t.setClosable(false);
 		
-		tabs[0].setContent(new ElementBorrowMenu());
-		tabs[1].setContent(new ElementReturnMenu());
+		tabs[0].setContent(new ElementBorrowTab());
+		tabs[1].setContent(new ElementReturnTab());
+		tabs[2].setContent(new ElementRenewTab());
+		tabs[3].setContent(new ElementReportDamagedTab());
 		
 		this.getTabs().addAll(tabs);
 	}
