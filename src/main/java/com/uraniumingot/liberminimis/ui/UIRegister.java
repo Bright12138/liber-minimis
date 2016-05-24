@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class UIRegister extends Stage
 {
@@ -28,6 +29,16 @@ public class UIRegister extends Stage
 	{
 		LiberMinimis.log.info("Starting a register screen");
 		this.setTitle(LanguageMap.translate("login.title"));
+		
+		this.setOnCloseRequest(new EventHandler<WindowEvent>()
+		{
+
+			@Override
+			public void handle(WindowEvent event) 
+			{
+				LiberMinimis.markForShutdown();
+			}
+		});
 		
 		HBox[] hb = new HBox[]
 				{

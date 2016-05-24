@@ -40,7 +40,7 @@ public class ElementHistoryTab extends VBox
 		@Override
 		protected void setMinWidth()
 		{
-			searchField.setMinWidth(550);
+			searchField.setMinWidth(565);
 		}
 			};
 	

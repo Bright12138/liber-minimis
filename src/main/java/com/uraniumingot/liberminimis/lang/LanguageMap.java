@@ -13,8 +13,6 @@ public class LanguageMap
 {
 	private static Map<String, String> lang = parseLang(readLocalizationFile());
 	
-
-	
 	private static ArrayList<String> readLocalizationFile()
 	{
 		LiberMinimis.log.info("Trying to load localization file");

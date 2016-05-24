@@ -4,6 +4,7 @@ import com.uraniumingot.liberminimis.lang.LanguageMap;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.text.Text;
 
 public class TabMiscMenu extends TabPane
 {
@@ -24,6 +25,10 @@ public class TabMiscMenu extends TabPane
 		
 		for(Tab t : tabs)
 			t.setClosable(false);
+//		tabs[0].setContent();
+		tabs[1].setContent(new Text("This feature is yet to be implemented"));
+		tabs[2].setContent(new ElementChangePasswordTab());
+		tabs[3].setContent(new ElementInfoTab());
 		
 		this.getTabs().addAll(tabs);
 	}
