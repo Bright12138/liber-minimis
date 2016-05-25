@@ -25,7 +25,7 @@ public class TabMiscMenu extends TabPane
 		
 		for(Tab t : tabs)
 			t.setClosable(false);
-//		tabs[0].setContent();
+		tabs[0].setContent(new ElementSettingsTab());
 		tabs[1].setContent(new Text("This feature is yet to be implemented"));
 		tabs[2].setContent(new ElementChangePasswordTab());
 		tabs[3].setContent(new ElementInfoTab());

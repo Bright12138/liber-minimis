@@ -1,7 +1,6 @@
 package com.uraniumingot.liberminimis.ui.element;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
-import com.uraniumingot.liberminimis.lib.Settings;
 import com.uraniumingot.liberminimis.util.DBUtil;
 
 import javafx.event.ActionEvent;
@@ -36,8 +35,8 @@ public class ElementReportDamagedTab extends VBox
 		for(HBox hb : hboxs)
 			hb.setAlignment(Pos.CENTER);
 		
-		bookfield.setOnAction(getReturnEvent());
-		confirmbtn.setOnAction(getReturnEvent());
+		bookfield.setOnAction(getReportEvent());
+		confirmbtn.setOnAction(getReportEvent());
 		
 		this.setSpacing(20.0);
 		this.setPadding(new Insets(20));
@@ -51,31 +50,31 @@ public class ElementReportDamagedTab extends VBox
 		this.getChildren().addAll(hboxs);
 	}
 	
-	private EventHandler<ActionEvent> getReturnEvent()
+	private EventHandler<ActionEvent> getReportEvent()
 	{
 		return new EventHandler<ActionEvent>()
 				{
 			@Override
 			public void handle(ActionEvent event)
 			{
-				handleReturnEvent();
+				handleReportEvent();
 			}
 				};
 	}
 	
-	private void handleReturnEvent()
+	private void handleReportEvent()
 	{
 		String bft = bookfield.getText();
-		int book = -1; //= DBUtil.getValidBookID(bft, false);
+		int book = DBUtil.getValidBookID(bft, false);
 		
-		if(book != -1)//Successful
+		if(book != -1 && DBUtil.inLendList(book, false))//Successful
 		{
 			bookfield.setText("");
-			//DBUtil.updateOnLend(book, Settings.returnPeriodDays);
+			DBUtil.setDamaged(book);
 			infolabel.setTextFill(Color.GREEN);
 			infolabel.setText(LanguageMap.translate("success.txt"));
 		}
-		else if(book == -1)
+		else
 		{
 			bookfield.setText("");
 			infolabel.setTextFill(Color.RED);

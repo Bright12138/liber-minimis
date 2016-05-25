@@ -67,7 +67,7 @@ public class ElementReturnTab extends VBox
 		String bft = bookfield.getText();
 		int book = DBUtil.getValidBookID(bft, false);
 		
-		if(book != -1)//Successful
+		if(book != -1 && DBUtil.inLendList(book, false))//Successful
 		{
 			bookfield.setText("");
 			DBUtil.removeOnLend(book);
@@ -79,6 +79,12 @@ public class ElementReturnTab extends VBox
 			bookfield.setText("");
 			infolabel.setTextFill(Color.RED);
 			infolabel.setText(LanguageMap.translate("failed.book.txt"));
+		}
+		else
+		{
+			bookfield.setText("");
+			infolabel.setTextFill(Color.RED);
+			infolabel.setText(LanguageMap.translate("failed.book.nolend.txt"));
 		}
 	}
 }

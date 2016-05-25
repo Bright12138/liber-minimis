@@ -36,8 +36,8 @@ public class ElementRenewTab extends VBox
 		for(HBox hb : hboxs)
 			hb.setAlignment(Pos.CENTER);
 		
-		bookfield.setOnAction(getReturnEvent());
-		confirmbtn.setOnAction(getReturnEvent());
+		bookfield.setOnAction(getRenewEvent());
+		confirmbtn.setOnAction(getRenewEvent());
 		
 		this.setSpacing(20.0);
 		this.setPadding(new Insets(20));
@@ -51,35 +51,35 @@ public class ElementRenewTab extends VBox
 		this.getChildren().addAll(hboxs);
 	}
 	
-	private EventHandler<ActionEvent> getReturnEvent()
+	private EventHandler<ActionEvent> getRenewEvent()
 	{
 		return new EventHandler<ActionEvent>()
 				{
 			@Override
 			public void handle(ActionEvent event)
 			{
-				handleReturnEvent();
+				handleRenewEvent();
 			}
 				};
 	}
 	
-	private void handleReturnEvent()
+	private void handleRenewEvent()
 	{
 		String bft = bookfield.getText();
-		int book = -1; //= DBUtil.getValidBookID(bft, false);
+		int book = DBUtil.getValidBookID(bft, false);
 		
-		if(book != -1)//Successful
+		if(book != -1 && DBUtil.inLendList(book, false))//Successful
 		{
 			bookfield.setText("");
-			DBUtil.updateOnLend(book, Settings.returnPeriodDays);
+			DBUtil.updateOnLend(book, Settings.RENEW_DAY_COUNT);
 			infolabel.setTextFill(Color.GREEN);
 			infolabel.setText(LanguageMap.translate("success.txt"));
 		}
-		else if(book == -1)
+		else
 		{
 			bookfield.setText("");
 			infolabel.setTextFill(Color.RED);
-			infolabel.setText(LanguageMap.translate("failed.book.txt"));
+			infolabel.setText(LanguageMap.translate("failed.renew.txt"));
 		}
 	}
 }

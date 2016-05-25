@@ -13,15 +13,25 @@ import java.util.Map;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.lib.Reference;
+import com.uraniumingot.liberminimis.lib.Settings;
 
 public class ConfigHandler 
 {
 	private static Map<String, String> config;
 	private static boolean shouldUpdateFile = false;
 	
+	private static final ConfigUpdateThread cut = new ConfigUpdateThread();
+	
 	public static void init()
 	{
 		config = parseConfig(readConfigFile());
+		cut.setName("Configuration Update Thread");
+		cut.start();
+	}
+	
+	public static void markStop()
+	{
+		cut.markStop();
 	}
 	
 	private static ArrayList<String> readConfigFile()
@@ -80,6 +90,7 @@ public class ConfigHandler
 	private static void markFileUpdate()
 	{
 		shouldUpdateFile = true;
+		Settings.init();
 	}
 	
 	public static boolean shouldUpdate()

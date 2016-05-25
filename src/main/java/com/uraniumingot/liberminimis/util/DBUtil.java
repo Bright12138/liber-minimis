@@ -204,7 +204,7 @@ public class DBUtil
 	
 	private static String calculateReturnDate()
 	{
-		return String.format("DATETIME('NOW', '+%s day', '+4 hour')", Settings.returnPeriodDays);
+		return String.format("DATETIME('NOW', '+%s day', '+4 hour')", Settings.LEND_DAY_COUNT);
 	}
 	
 	private static String fromInt(int intString)
@@ -326,6 +326,18 @@ public class DBUtil
 			LiberMinimis.log.error("Failed to check whether the book is in lend list!", e);
 		}
 		return hasID;
+	}
+	
+	public static void setDamaged(int bookID)
+	{
+		try
+		{
+			SQLDatabase.getInstance().update("OnLend", "IsDamaged", "1", "BookID", String.valueOf(bookID));
+		}
+		catch(SQLException e)
+		{
+			LiberMinimis.log.error("Failed to toggle the bookstate to damaged!", e);
+		}
 	}
 	
 	public static boolean existsAsBookID(int ID, boolean onlyAvaliable)
