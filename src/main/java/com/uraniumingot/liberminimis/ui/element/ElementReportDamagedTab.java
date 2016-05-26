@@ -1,6 +1,7 @@
 package com.uraniumingot.liberminimis.ui.element;
 
 import com.uraniumingot.liberminimis.lang.LanguageMap;
+import com.uraniumingot.liberminimis.util.AuthUtil;
 import com.uraniumingot.liberminimis.util.DBUtil;
 
 import javafx.event.ActionEvent;
@@ -64,6 +65,9 @@ public class ElementReportDamagedTab extends VBox
 	
 	private void handleReportEvent()
 	{
+		if(!AuthUtil.authUserCompleted())
+			return;
+		
 		String bft = bookfield.getText();
 		int book = DBUtil.getValidBookID(bft, false);
 		

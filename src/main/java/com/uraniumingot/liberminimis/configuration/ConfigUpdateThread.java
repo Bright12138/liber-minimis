@@ -6,12 +6,12 @@ import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.lib.Settings;
 
 public class ConfigUpdateThread extends Thread
-{
-	private boolean shouldContinue = true;
-	
-	public void markStop()
+{	
+	public ConfigUpdateThread()
 	{
-		shouldContinue = false;
+		super();
+		this.setDaemon(true);
+		this.setName("Configuration Update Thread");
 	}
 	
 	@Override
@@ -20,7 +20,7 @@ public class ConfigUpdateThread extends Thread
 		LiberMinimis.log.info("Starting config update thread");
 		try 
 		{
-			while(shouldContinue)
+			while(true)
 			{
 				if(ConfigHandler.shouldUpdate())
 				{

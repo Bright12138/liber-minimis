@@ -24,13 +24,7 @@ public class ConfigHandler
 	public static void init()
 	{
 		config = parseConfig(readConfigFile());
-		cut.setName("Configuration Update Thread");
 		cut.start();
-	}
-	
-	public static void markStop()
-	{
-		cut.markStop();
 	}
 	
 	private static ArrayList<String> readConfigFile()

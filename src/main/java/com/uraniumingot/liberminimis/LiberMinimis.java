@@ -7,6 +7,7 @@ import com.uraniumingot.liberminimis.configuration.ConfigHandler;
 import com.uraniumingot.liberminimis.database.SQLDatabase;
 import com.uraniumingot.liberminimis.lib.Reference;
 import com.uraniumingot.liberminimis.lib.Settings;
+import com.uraniumingot.liberminimis.login.LoginTimerThread;
 import com.uraniumingot.liberminimis.ui.UILogin;
 import com.uraniumingot.liberminimis.ui.UIRegister;
 import com.uraniumingot.liberminimis.util.EncryptUtil;
@@ -18,7 +19,7 @@ import javafx.stage.Stage;
 public class LiberMinimis extends Application
 {
 	public static final Logger log = LogManager.getLogger(Reference.NAME);
-
+	private static final LoginTimerThread timerThread = new LoginTimerThread();
 	
 	public static void main(String[] args)
 	{
@@ -26,15 +27,10 @@ public class LiberMinimis extends Application
 		SystemUtil.initDataFolder();
 		ConfigHandler.init();
 		Settings.init();
+		timerThread.start();
 		SQLDatabase.init();
 		launch();
 	}
-	
-	public static void markForShutdown()
-	{
-		ConfigHandler.markStop();
-	}
-	
 	
 	@Override
 	public void start(Stage primary)
@@ -44,5 +40,10 @@ public class LiberMinimis extends Application
 			new UILogin();
 		else
 			new UIRegister();
+	}
+	
+	public static LoginTimerThread getLoginTimer()
+	{
+		return timerThread;
 	}
 }

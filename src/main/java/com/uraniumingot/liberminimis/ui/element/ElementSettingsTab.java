@@ -4,6 +4,7 @@ import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.configuration.ConfigHandler;
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 import com.uraniumingot.liberminimis.lib.Settings;
+import com.uraniumingot.liberminimis.util.AuthUtil;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,7 +40,7 @@ public class ElementSettingsTab extends VBox
 		lendField.setText(String.valueOf(Settings.LEND_DAY_COUNT));
 		renewField.setText(String.valueOf(Settings.RENEW_DAY_COUNT));
 		needPasswordOnActionBtn.setSelected(Settings.NEED_PASSWORD_ON_ACTION);
-		needPasswordOnActionBtn.setText(LanguageMap.translate(needPasswordOnActionBtn.isSelected() ? "settings.needpasswordonaction.no.toggle" : "settings.needpasswordonaction.yes.toggle"));
+		needPasswordOnActionBtn.setText(LanguageMap.translate(needPasswordOnActionBtn.isSelected() ? "settings.needpasswordonaction.yes.toggle" : "settings.needpasswordonaction.no.toggle"));
 		
 		needPasswordOnActionBtn.setMinWidth(75);
 		munpField.setMaxWidth(30);
@@ -69,7 +70,7 @@ public class ElementSettingsTab extends VBox
 			@Override
 			public void handle(ActionEvent event)
 			{
-				needPasswordOnActionBtn.setText(LanguageMap.translate(needPasswordOnActionBtn.isSelected() ? "settings.needpasswordonaction.no.toggle" : "settings.needpasswordonaction.yes.toggle"));
+				needPasswordOnActionBtn.setText(LanguageMap.translate(needPasswordOnActionBtn.isSelected() ? "settings.needpasswordonaction.yes.toggle" : "settings.needpasswordonaction.no.toggle"));
 			}
 			
 		});
@@ -99,6 +100,9 @@ public class ElementSettingsTab extends VBox
 	
 	private void handleApply()
 	{
+		if(!AuthUtil.authUserCompleted())
+			return;
+		
 		LiberMinimis.log.info("Applying config updates");
 		
 		boolean needPasswordOnActionValue = needPasswordOnActionBtn.isSelected();

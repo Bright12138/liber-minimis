@@ -17,28 +17,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class UILogin extends Stage
 {
 	private final Label login = new Label(LanguageMap.translate("login.txt"));
 	private final Button loginbtn = new Button(LanguageMap.translate("login.btn"));
 	private final PasswordField pwfield = new PasswordField();
+	private boolean wasSuccessful = false;
 	
 	public UILogin()
 	{
 		LiberMinimis.log.info("Starting a login screen");
 		this.setTitle(LanguageMap.translate("login.title"));
-		
-		this.setOnCloseRequest(new EventHandler<WindowEvent>()
-		{
-
-			@Override
-			public void handle(WindowEvent event) 
-			{
-				LiberMinimis.markForShutdown();
-			}
-		});
 		
 		HBox[] hb = new HBox[]
 				{
@@ -71,6 +61,41 @@ public class UILogin extends Stage
 		this.show();
 	}
 	
+	public UILogin(boolean inSession)
+	{
+		this.setTitle(LanguageMap.translate("login.title"));
+		
+		HBox[] hb = new HBox[]
+				{
+						new HBox(),
+						new HBox(),
+						new HBox()
+				};
+		
+		Label password = new Label(LanguageMap.translate("password.txt"));
+
+		VBox vb = new VBox();
+		
+		for(HBox hbox: hb)
+		{
+			hbox.setPadding(new Insets(9));
+			hbox.setAlignment(Pos.CENTER);
+		}
+		
+		loginbtn.setOnAction(getActionLoginEvent());
+		pwfield.setOnAction(getActionLoginEvent());
+		
+		hb[0].getChildren().add(login);
+		hb[1].getChildren().addAll(password, pwfield);
+		hb[2].getChildren().add(loginbtn);
+		
+		vb.getChildren().addAll(hb);
+		
+		this.setScene(new Scene(vb, 250, 120));
+		this.setResizable(false);
+		this.showAndWait();
+	}
+	
 	public void hideStage()
 	{
 		this.hide();
@@ -99,5 +124,34 @@ public class UILogin extends Stage
 			}
 				};
 		
+	}
+	
+	public boolean getLoginStatus()
+	{
+		return wasSuccessful;
+	}
+	
+	private EventHandler<ActionEvent> getActionLoginEvent()
+	{
+		return new EventHandler<ActionEvent>()
+		{
+			@Override
+			public void handle(ActionEvent event)
+			{
+				String pw = pwfield.getText();
+				if (!EncryptUtil.isPassword(pw))
+				{
+					login.setText(LanguageMap.translate("login.wrongpassword"));
+					login.setTextFill(Color.RED);
+					pwfield.setText("");
+				}
+				else
+				{
+					LiberMinimis.log.info("Starting main application");
+					wasSuccessful = true;
+					hideStage();
+				}
+			}
+		};
 	}
 }
