@@ -22,7 +22,7 @@ public class ElementAllBooksTab extends VBox
 	private final TableView<String> table = new TableView<String>();
 	private final TextField nameField = new TextField();
 	private final TextField commentField = new TextField();
-	private final Button addUserButton = new Button(LanguageMap.translate("addbook.btn"));
+	private final Button addBookButton = new Button(LanguageMap.translate("addbook.btn"));
 	private final ElementSearchBar searchBar = new ElementSearchBar(SearchType.TypeBookID, SearchType.TypeBookName, SearchType.TypeBookComment, SearchType.TypeBookAddedTime)
 			{
 		@Override
@@ -38,7 +38,7 @@ public class ElementAllBooksTab extends VBox
 		commentField.setPromptText(LanguageMap.translate("addbook.comment"));
 		commentField.setMinWidth(585);
 		
-		addUserButton.setOnAction(getAddUserEvent());
+		addBookButton.setOnAction(getaddBookEvent());
 		
 		TableColumn<String, String> idcol = new TableColumn<>(LanguageMap.translate("books.id"));
 		TableColumn<String, String> namecol = new TableColumn<>(LanguageMap.translate("books.name"));
@@ -102,7 +102,7 @@ public class ElementAllBooksTab extends VBox
 		//HBox bottom
 		HBox hbb = new HBox();
 		hbb.setSpacing(3);
-		hbb.getChildren().addAll(nameField, commentField, addUserButton);
+		hbb.getChildren().addAll(nameField, commentField, addBookButton);
 		
 		this.setSpacing(9);
 		this.setPadding(new Insets(9));
@@ -110,26 +110,26 @@ public class ElementAllBooksTab extends VBox
 		this.getChildren().addAll(searchBar, table, hbb);
 	}
 	
-	private void handleAddUser()
+	private void handleAddBook()
 	{
 		String name = nameField.getText();
 		String comment = commentField.getText();
 		if(!name.equals(""))
 		{
-			DBUtil.addUser(name, comment);
+			DBUtil.addBook(name, comment);
 			nameField.setText("");
 			commentField.setText("");
 		}
 	}
 	
-	public EventHandler<ActionEvent> getAddUserEvent()
+	public EventHandler<ActionEvent> getaddBookEvent()
 	{
 		return new EventHandler<ActionEvent>()
 		{
 			@Override
 			public void handle(ActionEvent event) 
 			{
-				handleAddUser();
+				handleAddBook();
 			}
 		};
 	}

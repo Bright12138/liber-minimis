@@ -1,8 +1,12 @@
 package com.uraniumingot.liberminimis.ui.element;
 
+import com.uraniumingot.liberminimis.LiberMinimis;
+import com.uraniumingot.liberminimis.configuration.ConfigHandler;
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 import com.uraniumingot.liberminimis.lib.Settings;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -60,6 +64,26 @@ public class ElementSettingsTab extends VBox
 			hb.setAlignment(Pos.CENTER);
 		}
 		
+		needPasswordOnActionBtn.setOnAction(new EventHandler<ActionEvent>()
+		{
+			@Override
+			public void handle(ActionEvent event)
+			{
+				needPasswordOnActionBtn.setText(LanguageMap.translate(needPasswordOnActionBtn.isSelected() ? "settings.needpasswordonaction.no.toggle" : "settings.needpasswordonaction.yes.toggle"));
+			}
+			
+		});
+		
+		applybtn.setOnAction(new EventHandler<ActionEvent>()
+		{
+
+			@Override
+			public void handle(ActionEvent event) 
+			{
+				handleApply();
+			}
+		});
+		
 		hbs[0].getChildren().add(settings);
 		hbs[1].getChildren().add(settingsh);
 		hbs[2].getChildren().addAll(npa, needPasswordOnActionBtn);
@@ -71,6 +95,25 @@ public class ElementSettingsTab extends VBox
 		this.setPadding(new Insets(9));
 		this.setAlignment(Pos.CENTER);
 		this.getChildren().addAll(hbs);
+	}
+	
+	private void handleApply()
+	{
+		LiberMinimis.log.info("Applying config updates");
+		
+		boolean needPasswordOnActionValue = needPasswordOnActionBtn.isSelected();
+		int munpValue = Integer.parseInt(munpField.getText());
+		int lendValue = Integer.parseInt(lendField.getText());
+		int renewValue = Integer.parseInt(renewField.getText());
+		
+		if(Settings.NEED_PASSWORD_ON_ACTION != needPasswordOnActionValue)
+			ConfigHandler.setBoolean("need_password_on_action", needPasswordOnActionValue);
+		if(Settings.MINUTES_UNTIL_NEXT_PASSWORD != munpValue)
+			ConfigHandler.setInt("minutes_until_next_password", munpValue);
+		if(Settings.LEND_DAY_COUNT != lendValue)
+			ConfigHandler.setInt("lend_day_count", lendValue);
+		if(Settings.RENEW_DAY_COUNT != renewValue)
+			ConfigHandler.setInt("renew_day_count", renewValue);
 	}
 
 }

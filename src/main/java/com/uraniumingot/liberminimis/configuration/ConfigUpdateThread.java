@@ -3,6 +3,7 @@ package com.uraniumingot.liberminimis.configuration;
 import java.util.concurrent.TimeUnit;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
+import com.uraniumingot.liberminimis.lib.Settings;
 
 public class ConfigUpdateThread extends Thread
 {
@@ -22,7 +23,10 @@ public class ConfigUpdateThread extends Thread
 			while(shouldContinue)
 			{
 				if(ConfigHandler.shouldUpdate())
+				{
+					Settings.init();
 					ConfigHandler.updateToFile();
+				}
 				
 				TimeUnit.MILLISECONDS.sleep(500);
 			}

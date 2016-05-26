@@ -13,7 +13,6 @@ import java.util.Map;
 
 import com.uraniumingot.liberminimis.LiberMinimis;
 import com.uraniumingot.liberminimis.lib.Reference;
-import com.uraniumingot.liberminimis.lib.Settings;
 
 public class ConfigHandler 
 {
@@ -90,7 +89,6 @@ public class ConfigHandler
 	private static void markFileUpdate()
 	{
 		shouldUpdateFile = true;
-		Settings.init();
 	}
 	
 	public static boolean shouldUpdate()
