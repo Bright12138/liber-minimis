@@ -1,9 +1,18 @@
 package com.uraniumingot.liberminimis.ui.element;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.uraniumingot.liberminimis.LiberMinimis;
+import com.uraniumingot.liberminimis.database.SQLDatabase;
 import com.uraniumingot.liberminimis.lang.LanguageMap;
 import com.uraniumingot.liberminimis.search.SearchType;
 import com.uraniumingot.liberminimis.util.DBUtil;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,14 +21,15 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
-public class ElementAllUsersTab extends VBox
+public class ElementAllUsersTab extends VBox implements ITableViewTab
 {
-	private final TableView<String> table = new TableView<String>();
+	private final TableView<ObservableList<String>> table = new TableView<ObservableList<String>>();
 	private final TextField nameField = new TextField();
 	private final TextField commentField = new TextField();
 	private final Button addUserButton = new Button(LanguageMap.translate("adduser.btn"));
@@ -28,7 +38,7 @@ public class ElementAllUsersTab extends VBox
 		@Override
 		public void onSearch(String text, SearchType type)
 		{
-			
+			onSearch(text, type);
 		}
 			};
 	
@@ -40,64 +50,11 @@ public class ElementAllUsersTab extends VBox
 		
 		addUserButton.setOnAction(getAddUserEvent());
 		
-		TableColumn<String, String> idcol = new TableColumn<>(LanguageMap.translate("users.id"));
-		TableColumn<String, String> namecol = new TableColumn<>(LanguageMap.translate("users.name"));
-		TableColumn<String, String> addedcol = new TableColumn<>(LanguageMap.translate("users.added"));
-		TableColumn<String, String> commentcol = new TableColumn<>(LanguageMap.translate("users.comment"));
-		TableColumn<String, String> delcol = new TableColumn<>(LanguageMap.translate("users.del"));
-		
-		delcol.setCellValueFactory(new PropertyValueFactory<>("DUMMY"));
-		
-		Callback<TableColumn<String, String>, TableCell<String, String>> cellFactory = new Callback<TableColumn<String, String>, TableCell<String, String>>()
-		{
-
-			@Override
-			public TableCell<String, String> call(TableColumn<String, String> arg) 
-			{
-				return new TableCell<String, String>()
-				{
-					Button delbtn = new Button(LanguageMap.translate("del.btn"));
-					
-					@Override
-					public void updateItem(String item, boolean empty)
-					{
-						super.updateItem(item, empty);
-						if(empty)
-						{
-							setGraphic(null);
-							setText(null);
-						}
-						else
-						{
-							delbtn.setOnAction( new EventHandler<ActionEvent>()
-							{
-								@Override
-								public void handle(ActionEvent event)
-								{
-									
-								}
-							});
-							setGraphic(delbtn);
-							setText(null);
-						}
-					}
-				};
-			}
-			
-		};
-		
-		delcol.setCellFactory(cellFactory);
-		
 		table.setEditable(true);
-		idcol.setEditable(false);
-		addedcol.setEditable(false);
+
 		table.setMinHeight(620);
 		
-		table.getColumns().add(idcol);
-		table.getColumns().add(namecol);
-		table.getColumns().add(addedcol);
-		table.getColumns().add(commentcol);
-		table.getColumns().add(delcol);
+		initColumns(getUsersTable());
 		
 		//HBox bottom
 		HBox hbb = new HBox();
@@ -106,6 +63,8 @@ public class ElementAllUsersTab extends VBox
 		
 		this.setSpacing(9);
 		this.setPadding(new Insets(9));
+		
+		updateTable(getUsersTable());
 		
 		this.getChildren().addAll(searchBar, table, hbb);
 	}
@@ -119,6 +78,7 @@ public class ElementAllUsersTab extends VBox
 			DBUtil.addUser(name, comment);
 			nameField.setText("");
 			commentField.setText("");
+			updateTable(getUsersTable());
 		}
 	}
 	
@@ -132,5 +92,92 @@ public class ElementAllUsersTab extends VBox
 				handleAddUser();
 			}
 		};
+	}
+	
+	private ResultSet getUsersTable()
+	{
+		ResultSet rs = null;
+		try
+		{
+			rs= SQLDatabase.getInstance().getTable("Users");
+		}
+		catch(SQLException e)
+		{
+			LiberMinimis.log.error("Failed to get users table from database!", e);
+		}
+		return rs;
+	}
+	
+	
+	//TODO implement edit methods, add delete user button
+	@Override
+	public void initColumns(ResultSet rs)
+	{
+		if(rs == null)
+		{
+			LiberMinimis.log.error("The users table returned a null result set!");
+			return;
+		}
+		
+		try
+		{
+			TableColumn<ObservableList<String>, String>[] cols = new TableColumn[rs.getMetaData().getColumnCount() - 1];//TODO Change all the -1 to +1 after adding two more columns
+			for(int i = 0; i < rs.getMetaData().getColumnCount() - 1; i++)// One more on this line
+			{
+				final int j = i;
+				cols[i] = new TableColumn<ObservableList<String>, String>(LanguageMap.translate(String.format("column.%s.%s", "users", rs.getMetaData().getColumnName(i+1).toLowerCase())));
+				cols[i].setCellValueFactory(new Callback<CellDataFeatures<ObservableList<String> ,String>,ObservableValue<String>>()
+				{                    
+                    public ObservableValue<String> call(CellDataFeatures<ObservableList<String>, String> param) 
+                    {                                                                                              
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+				});
+			}
+			cols[0].setEditable(false);
+			cols[2].setEditable(false);
+			table.getColumns().addAll(cols);
+		}
+		catch(SQLException e)
+		{
+			LiberMinimis.log.error("Failed to create columns from result set!", e);
+		}
+	}
+	
+	@Override
+	public void updateTable(ResultSet rs) 
+	{
+		if(rs == null)
+		{
+			LiberMinimis.log.error("The users table returned a null result set!");
+			return;
+		}
+		
+		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+		
+		try 
+		{
+			while(rs.next())
+			{
+				ObservableList<String> row = FXCollections.observableArrayList();
+				for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++)
+				{
+					row.add(rs.getString(i));
+				}
+				data.add(row);
+			}
+		} 
+		catch (SQLException e) 
+		{
+			LiberMinimis.log.error("Failed to add data all users from database!", e);
+		}
+		table.setItems(data);
+	}
+
+	//TODO complete search method
+	@Override
+	public void onSearch(String text, SearchType type) 
+	{
+		updateTable(null);
 	}
 }
